@@ -52,13 +52,8 @@ module.exports = function (webpackEnv) {
         options: cssOptions,
       },
       {
-        // Options for PostCSS as we reference these options twice
-        // Adds vendor prefixing based on your specified browser support in
-        // package.json
         loader: require.resolve('postcss-loader'),
         options: {
-          // Necessary for external CSS imports to work
-          // https://github.com/facebook/create-react-app/issues/2677
           ident: 'postcss',
           plugins: () => [
             require('postcss-flexbugs-fixes'),
@@ -68,9 +63,6 @@ module.exports = function (webpackEnv) {
               },
               stage: 3,
             }),
-            // Adds PostCSS Normalize as the reset css with default options,
-            // so that it honors browserslist config in package.json
-            // which in turn let's users customize the target behavior as per their needs.
             postcssNormalize(),
           ],
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
@@ -97,7 +89,7 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
-  return smp.wrap({
+  return {
     mode: isEnvDevelopment ? 'development' : 'production',
     bail: isEnvProduction,
     devtool: isEnvProduction ? false : 'cheap-module-source-map',
@@ -245,15 +237,15 @@ module.exports = function (webpackEnv) {
         buffer: 'buffer',
         process:'process'
       }),
-      new webpack.DefinePlugin(env.stringified),
+      // new webpack.DefinePlugin(env.stringified),
       // 热更新
       new webpack.HotModuleReplacementPlugin(),
       // css压缩
-      isEnvProduction &&
-      new MiniCssExtractPlugin({
-        filename: 'static/css/[name].[contenthash:8].css',
-        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-      }),
+      // isEnvProduction &&
+      // new MiniCssExtractPlugin({
+      //   filename: 'static/css/[name].[contenthash:8].css',
+      //   chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+      // }),
       // bundle大小分析
       // isEnvProduction && new BundleAnalyzerPlugin(),
       // 抽离三方库
@@ -286,6 +278,6 @@ module.exports = function (webpackEnv) {
     performance: false,
     // webpack5
     target: isEnvProduction ? "browserslist" : "web",
-    devServer: createDevServerConfig()
-  });
+    // devServer: createDevServerConfig()
+  };
 };
