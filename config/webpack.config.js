@@ -5,13 +5,13 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const paths = require('./paths');
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+// const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
 const postcssNormalize = require('postcss-normalize');
 
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
-const smp = new SpeedMeasurePlugin();
+// const smp = new SpeedMeasurePlugin();
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
@@ -80,7 +80,7 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
-  return smp.wrap({
+  return {
     mode: isEnvDevelopment ? 'development' : 'production',
     bail: isEnvProduction,
     devtool: isEnvProduction ? false : 'cheap-module-source-map',
@@ -273,5 +273,5 @@ module.exports = function (webpackEnv) {
     performance: false,
     // webpack5
     target: isEnvProduction ? "browserslist" : "web",
-  })
+  }
 };

@@ -1,6 +1,6 @@
 {
   "name": "epacker",
-  "version": "0.0.15",
+  "version": "0.0.17",
   "author": "liujuanjuan",
   "dependencies": {
     "@babel/core": "7.12.3",
