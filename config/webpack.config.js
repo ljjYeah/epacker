@@ -1,24 +1,15 @@
 'use strict';
 
 const webpack = require('webpack');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const paths = require('./paths');
-const modules = require('./modules');
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
-const createDevServerConfig = require('./webpackDevServer.config');
-
-
 const postcssNormalize = require('postcss-normalize');
 
-
-// Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
-
-const webpackDevClientEntry = require.resolve(
-  'react-dev-utils/webpackHotDevClient'
-);
 
 const smp = new SpeedMeasurePlugin();
 
@@ -89,7 +80,7 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
-  return {
+  return smp.wrap({
     mode: isEnvDevelopment ? 'development' : 'production',
     bail: isEnvProduction,
     devtool: isEnvProduction ? false : 'cheap-module-source-map',
@@ -107,9 +98,19 @@ module.exports = function (webpackEnv) {
         : isEnvDevelopment && 'static/js/[name].chunk.js',
       publicPath: paths.publicUrlOrPath
     },
-
     resolve: {
-      alias: modules.projectAlias,
+      alias: {
+        '@constants': path.join(paths.appSrc, 'constants'),
+        '@api': path.join(paths.appSrc, 'api'),
+        '@useHooks': path.join(paths.appSrc, 'useHooks'),
+        '@services': path.join(paths.appSrc, 'services'),
+        '@utils': path.join(paths.appSrc, 'utils'),
+        '@assets': path.join(paths.appSrc, 'assets'),
+        '@components': path.join(paths.appSrc, 'components'),
+        '@views': path.join(paths.appSrc, 'views'),
+        '@stores': path.join(paths.appSrc, 'stores'),
+        '@generated': path.join(paths.appSrc, 'generated')
+      },
       extensions: [
         '.js',
         '.ts',
@@ -230,7 +231,11 @@ module.exports = function (webpackEnv) {
     plugins: [
       new HtmlWebpackPlugin(
         {
-          template: paths.appHtml
+          template: paths.appHtml,
+          filename: "index.html",
+          scriptLoading: 'blocking',
+          inject: 'body',
+          chunks: ['index'],
         }
       ),
       new webpack.ProvidePlugin({
@@ -241,11 +246,11 @@ module.exports = function (webpackEnv) {
       // 热更新
       new webpack.HotModuleReplacementPlugin(),
       // css压缩
-      // isEnvProduction &&
-      // new MiniCssExtractPlugin({
-      //   filename: 'static/css/[name].[contenthash:8].css',
-      //   chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-      // }),
+      isEnvProduction &&
+      new MiniCssExtractPlugin({
+        filename: 'static/css/[name].[contenthash:8].css',
+        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+      }),
       // bundle大小分析
       // isEnvProduction && new BundleAnalyzerPlugin(),
       // 抽离三方库
@@ -260,17 +265,7 @@ module.exports = function (webpackEnv) {
             module: 'react-dom',
             entry: 'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js',
             global: 'ReactDOM'
-          },
-          // {
-          //   module: 'antd',
-          //   entry: 'https://cdn.bootcdn.net/ajax/libs/antd/4.14.0/antd.min.js',
-          //   global: 'antd'
-          // },
-          // {
-          //   module: '@ant-design/icons',
-          //   entry: 'https://cdn.bootcdn.net/ajax/libs/ant-design-icons/4.5.0/index.umd.min.js',
-          //   global: '@ant-design/icons'
-          // }
+          }
         ]
       }),
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
@@ -278,6 +273,5 @@ module.exports = function (webpackEnv) {
     performance: false,
     // webpack5
     target: isEnvProduction ? "browserslist" : "web",
-    // devServer: createDevServerConfig()
-  };
+  })
 };

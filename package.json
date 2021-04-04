@@ -1,14 +1,10 @@
 {
   "name": "epacker",
-  "version": "0.0.11",
+  "version": "0.0.15",
   "author": "liujuanjuan",
   "dependencies": {
     "@babel/core": "7.12.3",
-    "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
     "@svgr/webpack": "5.5.0",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
@@ -22,7 +18,6 @@
     "babel-plugin-named-asset-import": "^0.3.7",
     "babel-plugin-styless": "^1.4.25",
     "babel-preset-react-app": "^10.0.0",
-    "bfj": "^7.0.2",
     "cache-loader": "^4.1.0",
     "camelcase": "^6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
@@ -63,7 +58,6 @@
     "postcss-safe-parser": "5.0.2",
     "prompts": "2.4.0",
     "react-app-polyfill": "^2.0.0",
-    "react-dev-utils": "^11.0.3",
     "react-refresh": "^0.8.3",
     "resolve": "1.18.1",
     "resolve-url-loader": "^3.1.2",
@@ -87,16 +81,5 @@
   "scripts": {
     "start": "webpack-dev-server --config config/webpack.config.js"
   },
-  "bin": "./bin/epacker.js",
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
-  }
+  "bin": "./bin/epacker.js"
 }

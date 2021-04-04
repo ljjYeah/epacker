@@ -5,5 +5,5 @@ const createDevServerConfig = require('../config/webpackDevServer.config');
 
 module.exports = {
   ...configFactory('development'),
-  devServer: createDevServerConfig()
+  devServer: createDevServerConfig
 }
